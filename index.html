@@ -462,13 +462,17 @@
             padding: 15px 20px;
             border-radius: 10px;
             text-align: center;
-            min-width: 70px;
+            width: 80px;
+            flex-shrink: 0;
         }
 
         .countdown-value {
             font-size: 28px;
             font-weight: bold;
             font-variant-numeric: tabular-nums;
+            font-family: 'Courier New', monospace;
+            width: 40px;
+            margin: 0 auto;
         }
 
         .countdown-label {
@@ -516,10 +520,12 @@
 
             .countdown-item {
                 padding: 10px 12px;
-                min-width: 60px;
+                width: 70px;
+                flex-shrink: 0;
             }
 
             .countdown-value {
+                width: 35px;
                 font-size: 22px;
             }
 
@@ -601,15 +607,15 @@
                     
                     <div class="countdown-box">
                         <div class="countdown-item">
-                            <div class="countdown-value">{{ timeUntilNextMeeting.hours }}</div>
+                            <div class="countdown-value">{{ String(timeUntilNextMeeting.hours).padStart(2, '0') }}</div>
                             <div class="countdown-label">小时</div>
                         </div>
                         <div class="countdown-item">
-                            <div class="countdown-value">{{ timeUntilNextMeeting.minutes }}</div>
+                            <div class="countdown-value">{{ String(timeUntilNextMeeting.minutes).padStart(2, '0') }}</div>
                             <div class="countdown-label">分钟</div>
                         </div>
                         <div class="countdown-item">
-                            <div class="countdown-value">{{ timeUntilNextMeeting.seconds }}</div>
+                            <div class="countdown-value">{{ String(timeUntilNextMeeting.seconds).padStart(2, '0') }}</div>
                             <div class="countdown-label">秒</div>
                         </div>
                     </div>
