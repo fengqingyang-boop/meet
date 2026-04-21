@@ -60,6 +60,7 @@
             height: 20px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 2px;
+            flex-shrink: 0;
         }
 
         .form-group {
@@ -73,20 +74,310 @@
             font-weight: 500;
         }
 
-        input[type="datetime-local"] {
-            width: 100%;
+        .datetime-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: 12px 15px;
+            background: white;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
-            font-size: 16px;
+            cursor: pointer;
             transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .datetime-display:hover {
+            border-color: #667eea;
+        }
+
+        .datetime-display.active {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .datetime-text {
+            color: #555;
+            font-size: 16px;
+        }
+
+        .datetime-text.placeholder {
+            color: #aaa;
+        }
+
+        .datetime-icon {
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        /* 自定义日期时间选择器弹窗 */
+        .datetime-picker-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .datetime-picker {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .picker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .picker-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .picker-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .picker-close:hover {
+            color: #667eea;
+        }
+
+        /* 日期选择部分 */
+        .date-section {
+            margin-bottom: 20px;
+        }
+
+        .date-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .date-nav-btn {
+            background: #f0f0f0;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            color: #555;
+            transition: background 0.3s;
+        }
+
+        .date-nav-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .date-nav-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .weekday {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            padding: 8px 0;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .day-btn {
+            background: none;
+            border: none;
+            padding: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .day-btn:hover:not(:disabled) {
+            background: #f0f0f0;
+        }
+
+        .day-btn:disabled {
+            color: #ddd;
+            cursor: not-allowed;
+        }
+
+        .day-btn.other-month {
+            color: #ccc;
+        }
+
+        .day-btn.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .day-btn.today {
+            border: 2px solid #667eea;
+        }
+
+        /* 时间选择部分 */
+        .time-section {
+            margin-bottom: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .time-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .time-picker {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .time-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .time-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .time-btn {
+            background: #f0f0f0;
+            border: none;
+            width: 40px;
+            height: 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: #555;
+            transition: background 0.3s;
+        }
+
+        .time-btn:hover:not(:disabled) {
+            background: #667eea;
+            color: white;
+        }
+
+        .time-btn:disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .time-value {
+            width: 60px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .time-unit {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .time-separator {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        /* 底部按钮 */
+        .picker-footer {
+            display: flex;
+            gap: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-cancel {
+            background: #f0f0f0;
             color: #555;
         }
 
-        input[type="datetime-local"]:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        .btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
         }
 
         .result-box {
@@ -102,6 +393,7 @@
             font-size: 48px;
             font-weight: bold;
             margin: 10px 0;
+            font-variant-numeric: tabular-nums;
         }
 
         .result-label {
@@ -170,11 +462,13 @@
             padding: 15px 20px;
             border-radius: 10px;
             text-align: center;
+            min-width: 70px;
         }
 
         .countdown-value {
             font-size: 28px;
             font-weight: bold;
+            font-variant-numeric: tabular-nums;
         }
 
         .countdown-label {
@@ -222,10 +516,26 @@
 
             .countdown-item {
                 padding: 10px 12px;
+                min-width: 60px;
             }
 
             .countdown-value {
                 font-size: 22px;
+            }
+
+            .datetime-picker {
+                padding: 20px;
+            }
+
+            .time-value {
+                width: 50px;
+                height: 45px;
+                font-size: 20px;
+            }
+
+            .time-btn {
+                width: 35px;
+                height: 28px;
             }
         }
     </style>
@@ -243,13 +553,17 @@
             <div class="section">
                 <div class="section-title">上次见面</div>
                 <div class="form-group">
-                    <label for="last-meeting">选择上次见面时间</label>
-                    <input 
-                        type="datetime-local" 
-                        id="last-meeting" 
-                        v-model="lastMeetingTime"
-                        :max="maxLastMeetingTime"
+                    <label>选择上次见面时间</label>
+                    <div 
+                        class="datetime-display" 
+                        :class="{ active: showLastPicker }"
+                        @click="openLastPicker"
                     >
+                        <span class="datetime-text" :class="{ placeholder: !lastMeetingTime }">
+                            {{ lastMeetingTime ? formatDateTimeDisplay(lastMeetingTime) : '请选择日期和时间' }}
+                        </span>
+                        <span class="datetime-icon">📅</span>
+                    </div>
                 </div>
                 
                 <div v-if="lastMeetingTime && daysSinceLastMeeting >= 0" class="result-box">
@@ -268,13 +582,17 @@
             <div class="section">
                 <div class="section-title">下次见面</div>
                 <div class="form-group">
-                    <label for="next-meeting">选择下次见面时间</label>
-                    <input 
-                        type="datetime-local" 
-                        id="next-meeting" 
-                        v-model="nextMeetingTime"
-                        :min="minNextMeetingTime"
+                    <label>选择下次见面时间</label>
+                    <div 
+                        class="datetime-display" 
+                        :class="{ active: showNextPicker }"
+                        @click="openNextPicker"
                     >
+                        <span class="datetime-text" :class="{ placeholder: !nextMeetingTime }">
+                            {{ nextMeetingTime ? formatDateTimeDisplay(nextMeetingTime) : '请选择日期和时间' }}
+                        </span>
+                        <span class="datetime-icon">📅</span>
+                    </div>
                 </div>
                 
                 <div v-if="nextMeetingTime && timeUntilNextMeeting.total >= 0" class="result-box">
@@ -328,10 +646,156 @@
                 </div>
             </div>
         </div>
+
+        <!-- 上次见面时间选择器弹窗 -->
+        <div v-if="showLastPicker" class="datetime-picker-overlay" @click.self="closeLastPicker">
+            <div class="datetime-picker">
+                <div class="picker-header">
+                    <span class="picker-title">选择上次见面时间</span>
+                    <button class="picker-close" @click="closeLastPicker">&times;</button>
+                </div>
+
+                <!-- 日期选择 -->
+                <div class="date-section">
+                    <div class="date-nav">
+                        <button class="date-nav-btn" @click="prevMonth('last')">&#9664;</button>
+                        <span class="date-nav-text">{{ lastPickerYear }}年 {{ lastPickerMonth + 1 }}月</span>
+                        <button class="date-nav-btn" @click="nextMonth('last')">&#9654;</button>
+                    </div>
+                    <div class="weekdays">
+                        <div class="weekday">日</div>
+                        <div class="weekday">一</div>
+                        <div class="weekday">二</div>
+                        <div class="weekday">三</div>
+                        <div class="weekday">四</div>
+                        <div class="weekday">五</div>
+                        <div class="weekday">六</div>
+                    </div>
+                    <div class="days-grid">
+                        <button 
+                            v-for="(day, index) in lastPickerDays" 
+                            :key="index"
+                            class="day-btn"
+                            :class="{ 
+                                'other-month': !day.inCurrentMonth,
+                                'selected': isSelected('last', day),
+                                'today': isToday(day),
+                            }"
+                            :disabled="!day.inCurrentMonth || day.isFuture"
+                            @click="selectDay('last', day)"
+                        >
+                            {{ day.day }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 时间选择 -->
+                <div class="time-section">
+                    <div class="time-label">选择时间</div>
+                    <div class="time-picker">
+                        <div class="time-column">
+                            <div class="time-input-group">
+                                <button class="time-btn" @click="changeTime('last', 'hour', 1)" :disabled="lastPickerHour >= 23">▲</button>
+                                <div class="time-value">{{ String(lastPickerHour).padStart(2, '0') }}</div>
+                                <button class="time-btn" @click="changeTime('last', 'hour', -1)" :disabled="lastPickerHour <= 0">▼</button>
+                            </div>
+                            <div class="time-unit">小时</div>
+                        </div>
+                        <div class="time-separator">:</div>
+                        <div class="time-column">
+                            <div class="time-input-group">
+                                <button class="time-btn" @click="changeTime('last', 'minute', 1)" :disabled="lastPickerMinute >= 59">▲</button>
+                                <div class="time-value">{{ String(lastPickerMinute).padStart(2, '0') }}</div>
+                                <button class="time-btn" @click="changeTime('last', 'minute', -1)" :disabled="lastPickerMinute <= 0">▼</button>
+                            </div>
+                            <div class="time-unit">分钟</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="picker-footer">
+                    <button class="btn btn-cancel" @click="closeLastPicker">取消</button>
+                    <button class="btn btn-confirm" @click="confirmLastPicker">确定</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 下次见面时间选择器弹窗 -->
+        <div v-if="showNextPicker" class="datetime-picker-overlay" @click.self="closeNextPicker">
+            <div class="datetime-picker">
+                <div class="picker-header">
+                    <span class="picker-title">选择下次见面时间</span>
+                    <button class="picker-close" @click="closeNextPicker">&times;</button>
+                </div>
+
+                <!-- 日期选择 -->
+                <div class="date-section">
+                    <div class="date-nav">
+                        <button class="date-nav-btn" @click="prevMonth('next')">&#9664;</button>
+                        <span class="date-nav-text">{{ nextPickerYear }}年 {{ nextPickerMonth + 1 }}月</span>
+                        <button class="date-nav-btn" @click="nextMonth('next')">&#9654;</button>
+                    </div>
+                    <div class="weekdays">
+                        <div class="weekday">日</div>
+                        <div class="weekday">一</div>
+                        <div class="weekday">二</div>
+                        <div class="weekday">三</div>
+                        <div class="weekday">四</div>
+                        <div class="weekday">五</div>
+                        <div class="weekday">六</div>
+                    </div>
+                    <div class="days-grid">
+                        <button 
+                            v-for="(day, index) in nextPickerDays" 
+                            :key="index"
+                            class="day-btn"
+                            :class="{ 
+                                'other-month': !day.inCurrentMonth,
+                                'selected': isSelected('next', day),
+                                'today': isToday(day),
+                            }"
+                            :disabled="!day.inCurrentMonth || day.isPast"
+                            @click="selectDay('next', day)"
+                        >
+                            {{ day.day }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 时间选择 -->
+                <div class="time-section">
+                    <div class="time-label">选择时间</div>
+                    <div class="time-picker">
+                        <div class="time-column">
+                            <div class="time-input-group">
+                                <button class="time-btn" @click="changeTime('next', 'hour', 1)" :disabled="nextPickerHour >= 23">▲</button>
+                                <div class="time-value">{{ String(nextPickerHour).padStart(2, '0') }}</div>
+                                <button class="time-btn" @click="changeTime('next', 'hour', -1)" :disabled="nextPickerHour <= 0">▼</button>
+                            </div>
+                            <div class="time-unit">小时</div>
+                        </div>
+                        <div class="time-separator">:</div>
+                        <div class="time-column">
+                            <div class="time-input-group">
+                                <button class="time-btn" @click="changeTime('next', 'minute', 1)" :disabled="nextPickerMinute >= 59">▲</button>
+                                <div class="time-value">{{ String(nextPickerMinute).padStart(2, '0') }}</div>
+                                <button class="time-btn" @click="changeTime('next', 'minute', -1)" :disabled="nextPickerMinute <= 0">▼</button>
+                            </div>
+                            <div class="time-unit">分钟</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="picker-footer">
+                    <button class="btn btn-cancel" @click="closeNextPicker">取消</button>
+                    <button class="btn btn-confirm" @click="confirmNextPicker">确定</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        const { createApp, ref, computed, onMounted, onUnmounted } = Vue;
+        const { createApp, ref, computed, onMounted, onUnmounted, watch } = Vue;
 
         createApp({
             setup() {
@@ -340,13 +804,271 @@
                 const nextMeetingTime = ref('');
                 let timer = null;
 
-                const maxLastMeetingTime = computed(() => {
-                    return formatDateTimeLocal(new Date());
+                // 上次见面时间选择器状态
+                const showLastPicker = ref(false);
+                const lastPickerYear = ref(new Date().getFullYear());
+                const lastPickerMonth = ref(new Date().getMonth());
+                const lastPickerDay = ref(null);
+                const lastPickerHour = ref(12);
+                const lastPickerMinute = ref(0);
+
+                // 下次见面时间选择器状态
+                const showNextPicker = ref(false);
+                const nextPickerYear = ref(new Date().getFullYear());
+                const nextPickerMonth = ref(new Date().getMonth());
+                const nextPickerDay = ref(null);
+                const nextPickerHour = ref(12);
+                const nextPickerMinute = ref(0);
+
+                // 生成日历天数
+                function generateCalendarDays(year, month, type) {
+                    const days = [];
+                    const firstDay = new Date(year, month, 1);
+                    const lastDay = new Date(year, month + 1, 0);
+                    const startDayOfWeek = firstDay.getDay();
+                    const daysInMonth = lastDay.getDate();
+                    
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    // 上个月的天数
+                    const prevMonthLastDay = new Date(year, month, 0).getDate();
+                    for (let i = startDayOfWeek - 1; i >= 0; i--) {
+                        const day = prevMonthLastDay - i;
+                        const date = new Date(year, month - 1, day);
+                        days.push({
+                            year: date.getFullYear(),
+                            month: date.getMonth(),
+                            day: day,
+                            inCurrentMonth: false,
+                            isFuture: date > today,
+                            isPast: date < today
+                        });
+                    }
+
+                    // 当前月的天数
+                    for (let i = 1; i <= daysInMonth; i++) {
+                        const date = new Date(year, month, i);
+                        const dateEnd = new Date(year, month, i, 23, 59, 59, 999);
+                        const dateStart = new Date(year, month, i, 0, 0, 0, 0);
+                        days.push({
+                            year: year,
+                            month: month,
+                            day: i,
+                            inCurrentMonth: true,
+                            isFuture: dateStart > today,
+                            isPast: dateEnd < today
+                        });
+                    }
+
+                    // 下个月的天数
+                    const remainingDays = 42 - days.length;
+                    for (let i = 1; i <= remainingDays; i++) {
+                        const date = new Date(year, month + 1, i);
+                        days.push({
+                            year: date.getFullYear(),
+                            month: date.getMonth(),
+                            day: i,
+                            inCurrentMonth: false,
+                            isFuture: date > today,
+                            isPast: date < today
+                        });
+                    }
+
+                    return days;
+                }
+
+                // 上次见面的日历天数
+                const lastPickerDays = computed(() => {
+                    return generateCalendarDays(lastPickerYear.value, lastPickerMonth.value, 'last');
                 });
 
-                const minNextMeetingTime = computed(() => {
-                    return formatDateTimeLocal(new Date());
+                // 下次见面的日历天数
+                const nextPickerDays = computed(() => {
+                    return generateCalendarDays(nextPickerYear.value, nextPickerMonth.value, 'next');
                 });
+
+                // 月份导航
+                function prevMonth(type) {
+                    if (type === 'last') {
+                        lastPickerMonth.value--;
+                        if (lastPickerMonth.value < 0) {
+                            lastPickerMonth.value = 11;
+                            lastPickerYear.value--;
+                        }
+                    } else {
+                        nextPickerMonth.value--;
+                        if (nextPickerMonth.value < 0) {
+                            nextPickerMonth.value = 11;
+                            nextPickerYear.value--;
+                        }
+                    }
+                }
+
+                function nextMonth(type) {
+                    if (type === 'last') {
+                        lastPickerMonth.value++;
+                        if (lastPickerMonth.value > 11) {
+                            lastPickerMonth.value = 0;
+                            lastPickerYear.value++;
+                        }
+                    } else {
+                        nextPickerMonth.value++;
+                        if (nextPickerMonth.value > 11) {
+                            nextPickerMonth.value = 0;
+                            nextPickerYear.value++;
+                        }
+                    }
+                }
+
+                // 选择日期
+                function selectDay(type, day) {
+                    if (type === 'last') {
+                        lastPickerDay.value = { ...day };
+                    } else {
+                        nextPickerDay.value = { ...day };
+                    }
+                }
+
+                // 检查是否选中
+                function isSelected(type, day) {
+                    if (type === 'last') {
+                        return lastPickerDay.value && 
+                            lastPickerDay.value.year === day.year && 
+                            lastPickerDay.value.month === day.month && 
+                            lastPickerDay.value.day === day.day;
+                    } else {
+                        return nextPickerDay.value && 
+                            nextPickerDay.value.year === day.year && 
+                            nextPickerDay.value.month === day.month && 
+                            nextPickerDay.value.day === day.day;
+                    }
+                }
+
+                // 检查是否是今天
+                function isToday(day) {
+                    const today = new Date();
+                    return day.year === today.getFullYear() && 
+                           day.month === today.getMonth() && 
+                           day.day === today.getDate();
+                }
+
+                // 调整时间
+                function changeTime(type, unit, delta) {
+                    if (type === 'last') {
+                        if (unit === 'hour') {
+                            lastPickerHour.value = Math.max(0, Math.min(23, lastPickerHour.value + delta));
+                        } else {
+                            lastPickerMinute.value = Math.max(0, Math.min(59, lastPickerMinute.value + delta));
+                        }
+                    } else {
+                        if (unit === 'hour') {
+                            nextPickerHour.value = Math.max(0, Math.min(23, nextPickerHour.value + delta));
+                        } else {
+                            nextPickerMinute.value = Math.max(0, Math.min(59, nextPickerMinute.value + delta));
+                        }
+                    }
+                }
+
+                // 打开选择器
+                function openLastPicker() {
+                    if (lastMeetingTime.value) {
+                        const date = new Date(lastMeetingTime.value);
+                        lastPickerYear.value = date.getFullYear();
+                        lastPickerMonth.value = date.getMonth();
+                        lastPickerDay.value = {
+                            year: date.getFullYear(),
+                            month: date.getMonth(),
+                            day: date.getDate()
+                        };
+                        lastPickerHour.value = date.getHours();
+                        lastPickerMinute.value = date.getMinutes();
+                    } else {
+                        const now = new Date();
+                        lastPickerYear.value = now.getFullYear();
+                        lastPickerMonth.value = now.getMonth();
+                        lastPickerDay.value = null;
+                        lastPickerHour.value = 12;
+                        lastPickerMinute.value = 0;
+                    }
+                    showLastPicker.value = true;
+                }
+
+                function openNextPicker() {
+                    if (nextMeetingTime.value) {
+                        const date = new Date(nextMeetingTime.value);
+                        nextPickerYear.value = date.getFullYear();
+                        nextPickerMonth.value = date.getMonth();
+                        nextPickerDay.value = {
+                            year: date.getFullYear(),
+                            month: date.getMonth(),
+                            day: date.getDate()
+                        };
+                        nextPickerHour.value = date.getHours();
+                        nextPickerMinute.value = date.getMinutes();
+                    } else {
+                        const now = new Date();
+                        nextPickerYear.value = now.getFullYear();
+                        nextPickerMonth.value = now.getMonth();
+                        nextPickerDay.value = null;
+                        nextPickerHour.value = 12;
+                        nextPickerMinute.value = 0;
+                    }
+                    showNextPicker.value = true;
+                }
+
+                // 关闭选择器
+                function closeLastPicker() {
+                    showLastPicker.value = false;
+                }
+
+                function closeNextPicker() {
+                    showNextPicker.value = false;
+                }
+
+                // 确认选择
+                function confirmLastPicker() {
+                    if (!lastPickerDay.value) {
+                        alert('请选择日期');
+                        return;
+                    }
+                    const date = new Date(
+                        lastPickerDay.value.year,
+                        lastPickerDay.value.month,
+                        lastPickerDay.value.day,
+                        lastPickerHour.value,
+                        lastPickerMinute.value
+                    );
+                    lastMeetingTime.value = date.toISOString();
+                    closeLastPicker();
+                }
+
+                function confirmNextPicker() {
+                    if (!nextPickerDay.value) {
+                        alert('请选择日期');
+                        return;
+                    }
+                    const date = new Date(
+                        nextPickerDay.value.year,
+                        nextPickerDay.value.month,
+                        nextPickerDay.value.day,
+                        nextPickerHour.value,
+                        nextPickerMinute.value
+                    );
+                    nextMeetingTime.value = date.toISOString();
+                    closeNextPicker();
+                }
+
+                // 格式化显示日期时间
+                function formatDateTimeDisplay(isoString) {
+                    const date = new Date(isoString);
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const hours = String(date.getHours()).padStart(2, '0');
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    return `${year}年${month}月${day}日 ${hours}:${minutes}`;
+                }
 
                 const daysSinceLastMeeting = computed(() => {
                     if (!lastMeetingTime.value) return -1;
@@ -428,15 +1150,6 @@
                     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
                 }
 
-                function formatDateTimeLocal(date) {
-                    const year = date.getFullYear();
-                    const month = String(date.getMonth() + 1).padStart(2, '0');
-                    const day = String(date.getDate()).padStart(2, '0');
-                    const hours = String(date.getHours()).padStart(2, '0');
-                    const minutes = String(date.getMinutes()).padStart(2, '0');
-                    return `${year}-${month}-${day}T${hours}:${minutes}`;
-                }
-
                 function updateCurrentTime() {
                     currentTime.value = new Date();
                 }
@@ -455,8 +1168,33 @@
                     currentTime,
                     lastMeetingTime,
                     nextMeetingTime,
-                    maxLastMeetingTime,
-                    minNextMeetingTime,
+                    showLastPicker,
+                    showNextPicker,
+                    lastPickerYear,
+                    lastPickerMonth,
+                    lastPickerDay,
+                    lastPickerHour,
+                    lastPickerMinute,
+                    nextPickerYear,
+                    nextPickerMonth,
+                    nextPickerDay,
+                    nextPickerHour,
+                    nextPickerMinute,
+                    lastPickerDays,
+                    nextPickerDays,
+                    prevMonth,
+                    nextMonth,
+                    selectDay,
+                    isSelected,
+                    isToday,
+                    changeTime,
+                    openLastPicker,
+                    openNextPicker,
+                    closeLastPicker,
+                    closeNextPicker,
+                    confirmLastPicker,
+                    confirmNextPicker,
+                    formatDateTimeDisplay,
                     daysSinceLastMeeting,
                     hoursSinceLastMeeting,
                     minutesSinceLastMeeting,
