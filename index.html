@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>异地恋见面倒计时</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #764ba2;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="datetime-local"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            color: #555;
+        }
+
+        input[type="datetime-local"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+        }
+
+        .result-value {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .result-label {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .result-detail {
+            margin-top: 15px;
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        .progress-section {
+            margin-top: 20px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-text {
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            font-size: 16px;
+        }
+
+        .countdown-box {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .countdown-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .countdown-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .heart {
+            font-size: 24px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .current-time {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .result-value {
+                font-size: 36px;
+            }
+
+            .countdown-box {
+                gap: 10px;
+            }
+
+            .countdown-item {
+                padding: 10px 12px;
+            }
+
+            .countdown-value {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <h1><span class="heart">❤️</span> 异地恋见面倒计时 <span class="heart">❤️</span></h1>
+            
+            <div class="current-time">
+                当前时间：{{ formatDateTime(currentTime) }}
+            </div>
+
+            <!-- 上次见面时间 -->
+            <div class="section">
+                <div class="section-title">上次见面</div>
+                <div class="form-group">
+                    <label for="last-meeting">选择上次见面时间</label>
+                    <input 
+                        type="datetime-local" 
+                        id="last-meeting" 
+                        v-model="lastMeetingTime"
+                        :max="maxLastMeetingTime"
+                    >
+                </div>
+                
+                <div v-if="lastMeetingTime && daysSinceLastMeeting >= 0" class="result-box">
+                    <div class="result-label">距离上次见面已经</div>
+                    <div class="result-value">{{ daysSinceLastMeeting }} 天</div>
+                    <div class="result-detail">
+                        {{ hoursSinceLastMeeting }} 小时 {{ minutesSinceLastMeeting }} 分钟
+                    </div>
+                </div>
+                <div v-else class="empty-state">
+                    请选择上次见面时间
+                </div>
+            </div>
+
+            <!-- 下次见面时间 -->
+            <div class="section">
+                <div class="section-title">下次见面</div>
+                <div class="form-group">
+                    <label for="next-meeting">选择下次见面时间</label>
+                    <input 
+                        type="datetime-local" 
+                        id="next-meeting" 
+                        v-model="nextMeetingTime"
+                        :min="minNextMeetingTime"
+                    >
+                </div>
+                
+                <div v-if="nextMeetingTime && timeUntilNextMeeting.total >= 0" class="result-box">
+                    <div class="result-label">距离下次见面还有</div>
+                    <div class="result-value">{{ timeUntilNextMeeting.days }} 天</div>
+                    
+                    <div class="countdown-box">
+                        <div class="countdown-item">
+                            <div class="countdown-value">{{ timeUntilNextMeeting.hours }}</div>
+                            <div class="countdown-label">小时</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">{{ timeUntilNextMeeting.minutes }}</div>
+                            <div class="countdown-label">分钟</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">{{ timeUntilNextMeeting.seconds }}</div>
+                            <div class="countdown-label">秒</div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else-if="nextMeetingTime && timeUntilNextMeeting.total < 0" class="result-box">
+                    <div class="result-label">见面时间已过</div>
+                    <div class="result-value">🎉</div>
+                    <div class="result-detail">
+                        你们已经见面了！
+                    </div>
+                </div>
+                <div v-else class="empty-state">
+                    请选择下次见面时间
+                </div>
+            </div>
+
+            <!-- 进度条 -->
+            <div v-if="lastMeetingTime && nextMeetingTime && progressPercentage >= 0" class="section">
+                <div class="section-title">见面进度</div>
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span>上次见面</span>
+                        <span>{{ progressPercentage }}%</span>
+                        <span>下次见面</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div 
+                            class="progress-fill" 
+                            :style="{ width: progressPercentage + '%' }"
+                        >
+                            <span class="progress-text" v-if="progressPercentage >= 5">{{ progressPercentage }}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, computed, onMounted, onUnmounted } = Vue;
+
+        createApp({
+            setup() {
+                const currentTime = ref(new Date());
+                const lastMeetingTime = ref('');
+                const nextMeetingTime = ref('');
+                let timer = null;
+
+                const maxLastMeetingTime = computed(() => {
+                    return formatDateTimeLocal(new Date());
+                });
+
+                const minNextMeetingTime = computed(() => {
+                    return formatDateTimeLocal(new Date());
+                });
+
+                const daysSinceLastMeeting = computed(() => {
+                    if (!lastMeetingTime.value) return -1;
+                    const lastDate = new Date(lastMeetingTime.value);
+                    const now = currentTime.value;
+                    const diff = now - lastDate;
+                    if (diff < 0) return -1;
+                    return Math.floor(diff / (1000 * 60 * 60 * 24));
+                });
+
+                const hoursSinceLastMeeting = computed(() => {
+                    if (!lastMeetingTime.value) return 0;
+                    const lastDate = new Date(lastMeetingTime.value);
+                    const now = currentTime.value;
+                    const diff = now - lastDate;
+                    if (diff < 0) return 0;
+                    const totalHours = Math.floor(diff / (1000 * 60 * 60));
+                    return totalHours % 24;
+                });
+
+                const minutesSinceLastMeeting = computed(() => {
+                    if (!lastMeetingTime.value) return 0;
+                    const lastDate = new Date(lastMeetingTime.value);
+                    const now = currentTime.value;
+                    const diff = now - lastDate;
+                    if (diff < 0) return 0;
+                    const totalMinutes = Math.floor(diff / (1000 * 60));
+                    return totalMinutes % 60;
+                });
+
+                const timeUntilNextMeeting = computed(() => {
+                    if (!nextMeetingTime.value) return { total: -1, days: 0, hours: 0, minutes: 0, seconds: 0 };
+                    const nextDate = new Date(nextMeetingTime.value);
+                    const now = currentTime.value;
+                    const diff = nextDate - now;
+                    
+                    if (diff < 0) {
+                        return { total: diff, days: 0, hours: 0, minutes: 0, seconds: 0 };
+                    }
+                    
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    
+                    return {
+                        total: diff,
+                        days,
+                        hours,
+                        minutes,
+                        seconds
+                    };
+                });
+
+                const progressPercentage = computed(() => {
+                    if (!lastMeetingTime.value || !nextMeetingTime.value) return -1;
+                    
+                    const lastDate = new Date(lastMeetingTime.value);
+                    const nextDate = new Date(nextMeetingTime.value);
+                    const now = currentTime.value;
+                    
+                    const totalDuration = nextDate - lastDate;
+                    const elapsedDuration = now - lastDate;
+                    
+                    if (totalDuration <= 0 || elapsedDuration < 0) return -1;
+                    if (elapsedDuration >= totalDuration) return 100;
+                    
+                    const percentage = (elapsedDuration / totalDuration) * 100;
+                    return Math.round(percentage * 100) / 100;
+                });
+
+                function formatDateTime(date) {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const hours = String(date.getHours()).padStart(2, '0');
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    const seconds = String(date.getSeconds()).padStart(2, '0');
+                    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                }
+
+                function formatDateTimeLocal(date) {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const hours = String(date.getHours()).padStart(2, '0');
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    return `${year}-${month}-${day}T${hours}:${minutes}`;
+                }
+
+                function updateCurrentTime() {
+                    currentTime.value = new Date();
+                }
+
+                onMounted(() => {
+                    timer = setInterval(updateCurrentTime, 1000);
+                });
+
+                onUnmounted(() => {
+                    if (timer) {
+                        clearInterval(timer);
+                    }
+                });
+
+                return {
+                    currentTime,
+                    lastMeetingTime,
+                    nextMeetingTime,
+                    maxLastMeetingTime,
+                    minNextMeetingTime,
+                    daysSinceLastMeeting,
+                    hoursSinceLastMeeting,
+                    minutesSinceLastMeeting,
+                    timeUntilNextMeeting,
+                    progressPercentage,
+                    formatDateTime
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
